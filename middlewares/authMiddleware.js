@@ -1,17 +1,20 @@
 import jwt from "jsonwebtoken";
-import errors from "../lib/error-codes.js";
+import errors from "../lib/errors.js";
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader;
   if (token == null){
-    return res.status(errors.NO_TOKEN.status).json({ error: errors.NO_TOKEN.message });
+    throw errors.NO_TOKEN()
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(errors.UNAUTHORIZED.status).json({ error: errors.UNAUTHORIZED.message});
-    req.user = user;
+    if (err) {
+      throw errors.UNAUTHORIZED()
+    }
+    req.user = {id:user.userId};
+    console.log("====user",req.user);
     next();
   });
 }
-export default { authenticateToken }
+export default authenticateToken

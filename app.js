@@ -3,11 +3,12 @@ dotenv.config();
 import http from "http";
 import express from "express";
 import userRoutes from "./routes/userRoutes.js";
-//import userRecordRoutes from './routes/userRecordRoutes.js';
+import brandRoutes from './routes/brandRoutes.js';
 import errorHandler from "./lib/error-handler.js";
 import knex from "./knex.js";
 import error from "./lib/errors.js";
 import jsonParser from "./lib/json-parser.js";
+
 
 
 const app = express();
@@ -27,9 +28,10 @@ async function init() {
   knex.on("query", (queryData) => console.log("\n" + queryData.sql));
 
   //JSON validation
+
   app.use(jsonParser());
   app.use("/api/users", userRoutes);
-  //app.use("/user/records", userRecordRoutes);
+  app.use("/api/brand", brandRoutes);
 
 
   // Error handling
