@@ -16,24 +16,39 @@ async function getAllBrandByUserId(userId, page, limit, search) {
         .offset(offset);
 }
 
+async function getAllBrandByName(userId, name) {
+    return knex('brands') 
+        .where('user_id', userId)
+        .andWhere('is_active', true)
+        .andWhere('name', name);
+}
+
+
+// Get Brand By ID
+async function getBrandId(brandId) {
+    return knex('brands') 
+        .where('id', brandId)
+        .andWhere('is_active', true)
+}
+
 // Add a new brand record
 async function addBrand(payload) {
-    const [record] = await knex('brands') 
+    return await knex('brands') 
         .insert(payload)
         .returning('*');
-    return record;
+
 }
 
 // Update an existing brand record
 async function updateBrandRecordById(brandId, recordData) {
-    const [updatedRecord] = await knex('brands') 
+    return await knex('brands') 
         .where('id', brandId)
+        .andWhere('is_active', true)
         .update({
             ...recordData,
             updated_at: new Date()
         })
         .returning('*');
-    return updatedRecord;
 }
 
 // Delete a brand record
@@ -43,5 +58,5 @@ async function deleteBrandRecordByID(brandId) {
         .update({is_active:false});
 }
 
-export default {addBrand,getAllBrandByUserId,updateBrandRecordById,deleteBrandRecordByID}
+export default {addBrand,getAllBrandByUserId,updateBrandRecordById,deleteBrandRecordByID,getBrandId,getAllBrandByName}
 

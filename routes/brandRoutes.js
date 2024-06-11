@@ -1,15 +1,17 @@
 import express from 'express';
-import userRecordController from '../controllers/brandController.js';
+import brandController from '../controllers/brandController.js';
 import asyncback from "asyncback"
 const {
     createBrand,
     getAllBrandByUserId,
     updateBrandRecordById,
-    deleteBrandRecordByID
-} = userRecordController;
+    deleteBrandRecordByID,
+    getBrandId
+} = brandController;
 import authenticateToken from "../middlewares/authMiddleware.js";
 const router = express.Router();
 router.get("/", authenticateToken, asyncback(getAllBrandByUserId));
+router.get('/:id', authenticateToken, asyncback(getBrandId));
 router.post("/", authenticateToken, asyncback(createBrand));
 router.put("/:id", authenticateToken, asyncback(updateBrandRecordById));
 router.delete("/:id", authenticateToken, asyncback(deleteBrandRecordByID));

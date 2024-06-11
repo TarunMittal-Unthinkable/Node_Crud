@@ -4,6 +4,10 @@ import http from "http";
 import express from "express";
 import userRoutes from "./routes/userRoutes.js";
 import brandRoutes from './routes/brandRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
+import userProductRoutes from './routes/userProductRoutes.js';
 import errorHandler from "./lib/error-handler.js";
 import knex from "./knex.js";
 import error from "./lib/errors.js";
@@ -28,10 +32,15 @@ async function init() {
   knex.on("query", (queryData) => console.log("\n" + queryData.sql));
 
   //JSON validation
-
   app.use(jsonParser());
+
+  // Routes
   app.use("/api/users", userRoutes);
   app.use("/api/brand", brandRoutes);
+  app.use("/api/product", productRoutes);
+  app.use("/api/category", categoryRoutes);
+  app.use("/api/review", reviewRoutes);
+  app.use("/api/user/products", userProductRoutes);
 
 
   // Error handling
