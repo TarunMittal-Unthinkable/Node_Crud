@@ -10,5 +10,5 @@ export default {
       sizes: { type: 'string', format: 'nonEmptyOrBlank',enum:["S","M","L","XL","XXL"]},
       priceperquantity: { type: 'number'},
     },
-    required: ['name', 'description','productId'],
+    required: ['name', 'description'],
   };

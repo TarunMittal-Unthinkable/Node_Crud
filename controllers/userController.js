@@ -53,7 +53,7 @@ async function login(req, res, next) {
     validate(req.body, loginSchema);
     const existingUser = await findUser(req.body.email);
     if (!existingUser) {
-      throw errors.USER_EXISTS()
+      throw errors.INVALID_USER_LOGIN()
     }
 
     const isMatch = await bcrypt.compare(

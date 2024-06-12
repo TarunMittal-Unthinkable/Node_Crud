@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import http from "http";
 import express from "express";
+import { readFileSync } from 'fs';
+import path from 'path';
 import userRoutes from "./routes/userRoutes.js";
 import brandRoutes from './routes/brandRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -12,7 +14,8 @@ import errorHandler from "./lib/error-handler.js";
 import knex from "./knex.js";
 import error from "./lib/errors.js";
 import jsonParser from "./lib/json-parser.js";
-
+import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 
 const app = express();
@@ -20,6 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 // Database Migration
 async function init() {
+  app.use(cors({ exposedHeaders: ['Authorization'] }));
   await knex.migrate 
     .latest()
     .then(() => {
@@ -30,6 +34,18 @@ async function init() {
       process.exit(1);
     });
   knex.on("query", (queryData) => console.log("\n" + queryData.sql));
+
+  // Swagger API-DOCUMENTATION Setup
+  const stringifiedSwaggerDoc = readFileSync(
+    path.resolve('apiDoc/swagger.json'),
+    'utf8',
+  );
+  const swaggerDocument = JSON.parse(stringifiedSwaggerDoc);
+  app.use(
+    '/public/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument),
+  );
 
   //JSON validation
   app.use(jsonParser());

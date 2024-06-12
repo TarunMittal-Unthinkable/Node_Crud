@@ -1,0 +1,1053 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This doc will have all the API's for node.js crud application",
+    "version": "1.0.0",
+    "title": "Node Crud"
+  },
+  "securityDefinitions":{
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "host": "127.0.0.1:3000",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "This will contain all the API's for Auth Module"
+    },
+    {
+      "name": "Brand",
+      "description": "This will contain all the API's for Brand Module"
+    },
+    {
+      "name": "Product",
+      "description": "This will contain all the API's for Product Module"
+    },
+    {
+      "name": "Category",
+      "description": "This will contain all the API's for Category Module"
+    },
+    {
+      "name": "Product Information",
+      "description": "This will contain API to fetch the complete product data for user from all tables"
+    }
+  ],
+  "definitions": {
+    "login": {                              
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "format": "nonEmptyOrBlank",
+          "example": "123456"
+        }
+      },
+      "required": ["email", "password"]
+    },
+    "signUp": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "format": "nonEmptyOrBlank",
+          "example": "123456"
+        },
+        "first_name": { "type": "string"}, 
+        "last_name": { "type": "string"}, 
+        "dob": { "type": "string", "format": "date" }, 
+        "phone_no": { "type": "string", "format": "mobileNumber" }, 
+        "gender": { "type": "string"}
+      },
+      "required": ["email", "password"]
+    },
+    "loginNotFound": {
+      "type": "object",
+      "properties": {
+        "isError": { "example": "true" },
+        "code": { "example": "INVALID_USER_LOGIN" },
+        "message": {
+          "example": "You have entered an invalid username or password. Please try again"
+        }
+      }
+    },
+    "loginSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "User Successfully Login"}
+      }
+    },
+    "signUpSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "User Created Successfully" },
+        "data": {
+          "example": {
+            "id": "1",
+            "email": "example.gmail.com"
+          }
+        }
+      }
+    },
+    "invalidToken": {
+      "type": "object",
+      "properties": {
+        "isError": { "example": "true" },
+        "code": { "example": "UNAUTHORIZED" },
+        "message": {
+          "example": "Token is invalid/tempered."
+        }
+      }
+    },
+    "getBrand": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "description": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["name", "description"]
+    },
+    "getBrandSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Brand Fetched Successfully" },
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "user_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+          
+        }
+      }
+    },
+     "createBrand": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "description": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["name", "description"]
+    },
+    "updateBrand": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["id"]
+    },
+    "createBrandSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Brand Created Successfully" },
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "user_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+        }
+      }
+    },
+    "updateBrandSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Brand Updated successfully"},
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "user_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+        }
+      }
+    },
+    "deleteBrandSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Brand Deleted successfully"}
+      }
+    },
+    "getProduct": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["productId"]
+    },
+    "getProductSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Product Fetched Successfully" },
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "brand_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+          
+        }
+      }
+    },
+     "createProduct": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "description": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "brandId": { 
+          "type": "number", 
+          "format": "numberString"
+        }
+      },
+      "required": ["name", "description","brandId"]
+    },
+    "updateProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["id"]
+    },
+    "createProductSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Product Created Successfully" },
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "brand_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+        }
+      }
+    },
+    "updateProductSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Product Updated successfully"},
+        "data": {
+          "example": {
+            "id": "1",
+            "name": "Reebok",
+            "description": "Reebok is a good Brand",
+            "brand_id": 82,
+            "created_at": "2024-06-11T09:05:33.365Z",
+            "updated_at": "2024-06-11T09:05:33.365Z",
+            "is_active": true         
+          }
+        }
+      }
+    },
+    "deleteProductSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Product Deleted successfully"}
+      }
+    },
+    "getCategory": {
+      "type": "object",
+      "properties": {
+        "brandId": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["brandId"]
+    },
+    "getCategorySuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Product Fetched Successfully" },
+        "data": {
+          "example": {
+            "id": 2,
+            "name": "Slim Fit Jean",
+            "description": "Slim fit jeans with good fabric and affordable price",
+            "sizes": "L",
+            "colors": "Black",
+            "priceperquantity": "300.00",
+            "totalQty": 20,
+            "totalSold": 5,
+            "product_id": 4,
+            "created_at": "2024-06-11T09:23:38.613Z",
+            "updated_at": "2024-06-11T09:23:38.613Z",
+            "is_active": true
+        }
+          
+        }
+      }
+    },
+     "createCategory": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "description": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        },
+        "productId": { 
+          "type": "number", 
+          "format": "numberString"
+        },
+      "colors": { 
+        "type": "string", 
+        "format": "nonEmptyOrBlank" 
+      },
+      "totalQty": { 
+        "type": "number", 
+        "format": "numberString" 
+      },
+      "totalSold": { 
+        "type": "number", 
+        "format": "numberString" 
+      },
+      "sizes": { 
+        "type": "string", 
+        "format": "nonEmptyOrBlank",
+        "enum":["S","M","L","XL","XXL"]
+      },
+      "priceperquantity": { 
+        "type": "number"}
+      },
+      "required": ["name", "description"]
+    },
+    "updateCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "nonEmptyOrBlank"
+        }
+      },
+      "required": ["id"]
+    },
+    "createCategorySuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Category Created Successfully" },
+        "data": {
+          "id": 8,
+          "name": "Summer Fit Jean",
+          "description": "Summer fit jeans with good fabric and affordable price",
+          "sizes": "XXL",
+          "colors": "Red",
+          "priceperquantity": "900.00",
+          "totalQty": 420,
+          "totalSold": 55,
+          "product_id": 5,
+          "created_at": "2024-06-11T09:24:56.313Z",
+          "updated_at": "2024-06-12T09:55:12.055Z",
+          "is_active": true
+      }
+      }
+    },
+    "updateCategorySuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Category Updated successfully"},
+        "data": {
+          "example": {
+            "id": 8,
+            "name": "Summer Fit Jean",
+            "description": "Summer fit jeans with good fabric and affordable price",
+            "sizes": "XXL",
+            "colors": "Red",
+            "priceperquantity": "900.00",
+            "totalQty": 420,
+            "totalSold": 55,
+            "product_id": 5,
+            "created_at": "2024-06-11T09:24:56.313Z",
+            "updated_at": "2024-06-12T09:55:12.055Z",
+            "is_active": true
+        }
+        }
+      }
+    },
+    "deleteCategorySuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "Category Deleted successfully"}
+      }
+    },
+    "getProductInformationSuccess": {
+      "type": "object",
+      "properties": {
+        "success": { "example": "true" },
+        "message": { "example": "User Product Record fetched successfully" },
+        "data": {
+          "example": {
+            "id": 82,
+            "brands": [
+                {
+                    "id": 14,
+                    "name": "RedTape",
+                    "description": "RedTape is a good Brand",
+                    "user_id": 82,
+                    "created_at": "2024-06-11T09:01:35.515Z",
+                    "updated_at": "2024-06-11T09:01:35.515Z",
+                    "is_active": true,
+                    "products": [
+                        {
+                            "id": 5,
+                            "name": "Sneakers",
+                            "description": "Sneakers is of good quality",
+                            "brand_id": 14,
+                            "created_at": "2024-06-11T09:12:51.100Z",
+                            "updated_at": "2024-06-11T09:12:51.100Z",
+                            "is_active": true,
+                            "categories": [
+                                {
+                                    "id": 3,
+                                    "name": "Slim Fit Jean",
+                                    "description": "Slim fit jeans with good fabric and affordable price",
+                                    "sizes": "L",
+                                    "colors": "Black",
+                                    "priceperquantity": "300.00",
+                                    "totalQty": 20,
+                                    "totalSold": 5,
+                                    "product_id": 5,
+                                    "created_at": "2024-06-11T09:23:52.805Z",
+                                    "updated_at": "2024-06-11T09:23:52.805Z",
+                                    "is_active": true,
+                                    "reviews": [
+                                        {
+                                            "id": 3,
+                                            "category_id": 3,
+                                            "message": "Slim Fit Jean quality ig good. Packaging is good.",
+                                            "rating": 5,
+                                            "created_at": "2024-06-11T09:41:10.205Z",
+                                            "updated_at": "2024-06-11T09:41:10.205Z",
+                                            "is_active": true
+                                        },
+                                        {
+                                            "id": 4,
+                                            "category_id": 3,
+                                            "message": "Shirt quality ig good. Packaging is good.",
+                                            "rating": 5,
+                                            "created_at": "2024-06-11T09:41:19.165Z",
+                                            "updated_at": "2024-06-11T09:41:19.165Z",
+                                            "is_active": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+          
+        }
+      }
+    }
+  },
+  
+  "paths": {
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login the user",
+        "description": "",
+        "operationId": "login",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Email Id and password to be sent in request body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged In Successfully",
+            "schema": {
+              "$ref": "#/definitions/loginSuccess"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/loginNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign Up the user",
+        "description": "",
+        "operationId": "signup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Email Id, password and phone number to be sent in request body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/signUp"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "signed up successfully",
+            "schema": {
+              "$ref": "#/definitions/signUpSuccess"
+            }
+          }
+        }
+      }
+    },
+    "/brand": {
+      "get": {
+        "tags": ["Brand"],
+        "summary": "Get the Brand based on user",
+        "description": "",
+        "operationId": "brand",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Brand Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/getBrandSuccess"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Brand"],
+        "summary": "Create a new Brand",
+        "description": "",
+        "operationId": "createBrand",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Brand details to be sent in request body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Brand Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/createBrandSuccess"
+            }
+          }
+        }
+      }
+    },
+    "/brand/{id}": {
+      "put": {
+        "tags": ["Brand"],
+        "summary": "Update the Brand",
+        "description": "",
+        "operationId": "updatebrand",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the brand to update",
+            "schema": {
+              "$ref": "#/definitions/updateBrand"
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated brand details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Brand Updated Successfully",
+            "schema": {
+              "$ref": "#/definitions/updateBrandSuccess"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Brand"],
+        "summary": "Delete the Brand",
+        "description": "",
+        "operationId": "deleteBrand",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the brand to delete",
+            "schema": {
+              "$ref": "#/definitions/updateBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Brand Deleted Successfully",
+            "schema": {
+              "$ref": "#/definitions/deleteBrandSuccess"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Brand"],
+        "summary": "Get the Brand By ID",
+        "description": "",
+        "operationId": "getBrandByID",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the brand",
+            "schema": {
+              "$ref": "#/definitions/updateBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Brand Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/getBrandSuccess"
+            }
+          }
+        }
+      }
+    },
+    "/product": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get the Product based on user",
+        "description": "",
+        "operationId": "product",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "brandId",
+            "in": "query",
+            "required": true,
+            "description": "Brand Id of the Product to fetch",
+            "schema": {
+              "$ref": "#/definitions/getProduct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/getProductSuccess"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Product"],
+        "summary": "Create a new Product",
+        "description": "",
+        "operationId": "createProduct",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Product details to be sent in request body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createProduct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/createProductSuccess"
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}": {
+      "put": {
+        "tags": ["Product"],
+        "summary": "Update the Product",
+        "description": "",
+        "operationId": "updateProduct",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Product to update",
+            "schema": {
+              "$ref": "#/definitions/updateProduct"
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated Product details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createProduct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Updated Successfully",
+            "schema": {
+              "$ref": "#/definitions/updateProductSuccess"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Product"],
+        "summary": "Delete the Product",
+        "description": "",
+        "operationId": "deleteProduct",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Product to delete",
+            "schema": {
+              "$ref": "#/definitions/updateBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Deleted Successfully",
+            "schema": {
+              "$ref": "#/definitions/deleteProductSuccess"
+            }
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "Get the Category based on user",
+        "description": "",
+        "operationId": "product",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": true,
+            "description": "Product Id of the Category to fetch",
+            "schema": {
+              "$ref": "#/definitions/getProduct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/getCategorySuccess"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Category"],
+        "summary": "Create a new Category",
+        "description": "",
+        "operationId": "createCategory",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category details to be sent in request body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createCategory"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/createCategorySuccess"
+            }
+          }
+        }
+      }
+    },
+    "/category/{id}": {
+      "put": {
+        "tags": ["Category"],
+        "summary": "Update the Category",
+        "description": "",
+        "operationId": "updateCategory",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Category to update",
+            "schema": {
+              "$ref": "#/definitions/updateProduct"
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated Category details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createCategory"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Updated Successfully",
+            "schema": {
+              "$ref": "#/definitions/updateCategorySuccess"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Category"],
+        "summary": "Delete the Category",
+        "description": "",
+        "operationId": "deleteCategory",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Category to delete",
+            "schema": {
+              "$ref": "#/definitions/updateBrand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category Deleted Successfully",
+            "schema": {
+              "$ref": "#/definitions/deleteCategorySuccess"
+            }
+          }
+        }
+      }
+    },
+    "/user/products": {
+      "get": {
+        "tags": ["Product Information"],
+        "summary": "Get the Complete Product Information of user",
+        "description": "",
+        "operationId": "product",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Information Fetched Successfully",
+            "schema": {
+              "$ref": "#/definitions/getProductInformationSuccess"
+            }
+          }
+        }
+      }
+    }
+  }
+}
