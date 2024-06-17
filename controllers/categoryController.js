@@ -4,8 +4,25 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
-    
-    
+import client from "../lib/redisClient.js";
+
+    // Redis-Implementation
+
+// async function getAllCategoryByProductId(req, res) {
+//   const { page = 1, limit = 10, search = "",productId } = req.query;
+//   let category;
+//   const categoryInfo = await client.get(`CATEGORY_${productId}`);
+//   if (!categoryInfo) {
+//     category = await productService.getCategoryByProductId(brandId);
+//   if (!category || category.length === 0) {
+//     throw errors.CATEGORY_NOT_FOUND()
+// }
+//     await client.set(`CATEGORY_${productId}`,JSON.stringify(category));
+//   } else {
+//     category = JSON.parse(categoryInfo);
+//   }
+//     return successResponse(res, constant.CATEGORY_FETCHED, category);
+// }
     
     async function getAllCategoryByProductId(req, res) {
         const { page = 1, limit = 10, search = "",productId } = req.query;

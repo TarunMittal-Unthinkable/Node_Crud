@@ -16,7 +16,7 @@ import error from "./lib/errors.js";
 import jsonParser from "./lib/json-parser.js";
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-
+import client from "./lib/redisClient.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +35,16 @@ async function init() {
     });
   knex.on("query", (queryData) => console.log("\n" + queryData.sql));
 
+
+  // Redis-Server Connection
+  client.on('error', (err) => {
+    console.log('Redis Client Error', err);
+  });
+  client.on('ready', () => console.log('Redis is ready'));
+
+  await client.connect();
+  await client.ping();
+
   // Swagger API-DOCUMENTATION Setup
   const stringifiedSwaggerDoc = readFileSync(
     path.resolve('apiDoc/swagger.json'),
@@ -42,7 +52,7 @@ async function init() {
   );
   const swaggerDocument = JSON.parse(stringifiedSwaggerDoc);
   app.use(
-    '/public/api-docs',
+    '/api/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument),
   );

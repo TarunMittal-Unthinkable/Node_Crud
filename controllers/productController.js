@@ -4,8 +4,25 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
+import client from "../lib/redisClient.js";
 
+// Redis-Implementation
 
+// async function getAllProductByBrandId(req, res) {
+//   const { page = 1, limit = 10, search = "",brandId } = req.query;
+//   let product;
+//   const productInfo = await client.get(`PRODUCT_${brandId}`);
+//   if (!productInfo) {
+//     product = await productService.getProductByBrandId(brandId);
+//    if (!product || product.length === 0) {
+//      throw errors.PRODUCT_NOT_FOUND()
+//    }
+//     await client.set(`PRODUCT_${brandId}`,JSON.stringify(product));
+//   } else {
+//     product = JSON.parse(productInfo);
+//   }
+//     return successResponse(res, constant.PRODUCT_FETCHED, product);
+// }
 
 async function getAllProductByBrandId(req, res) {
     const { page = 1, limit = 10, search = "",brandId } = req.query;

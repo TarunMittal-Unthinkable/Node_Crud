@@ -4,6 +4,25 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
+import client from "../lib/redisClient.js";
+
+// Redis-Implementation
+
+// async function getAllBrandByUserId(req, res) {
+//   const { page = 1, limit = 10, search = "" } = req.query;
+//   let brand;
+//   const brandInfo = await client.get(`BRAND_${req.user.id}`);
+//   if (!brandInfo) {
+//     brand = await brandService.getAllBrandByUserId(
+//       req.user.id
+//     );
+//     await client.set(`BRAND_${req.user.id}`,JSON.stringify(brand));
+//   } else {
+//     brand = JSON.parse(brandInfo);
+//   }
+//   console.log("brand",brandInfo);
+//     return successResponse(res, constant.BRAND_FETCHED, brand);
+// }
 
 async function getAllBrandByUserId(req, res) {
   const { page = 1, limit = 10, search = "" } = req.query;
