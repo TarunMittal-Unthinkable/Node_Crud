@@ -1,0 +1,142 @@
+String Commands
+
+SET key value: Sets the string value of a key.
+
+Example 1: SET mykey "Hello"
+Output: "OK"
+Example 2: SET anotherkey "World"
+Output: "OK"
+Example 3: SET lastkey "Redis"
+Output: "OK"
+
+
+GET key: Gets the string value of a key.
+
+Example 1: GET mykey
+Output: "Hello"
+Example 2: GET anotherkey
+Output: "World"
+Example 3: GET lastkey
+Output: "Redis"
+
+
+DEL key: Deletes a key.
+
+Example 1: DEL mykey
+Output: (integer) 1
+Example 2: DEL anotherkey
+Output: (integer) 1
+Example 3: DEL lastkey
+Output: (integer) 1
+
+List Commands
+
+LPUSH key value: Prepends one or multiple values to a list.
+
+Example 1: LPUSH mylist "apple"
+Output: (integer) 1
+Example 2: LPUSH mylist "banana"
+Output: (integer) 2
+Example 3: LPUSH mylist "cherry"
+Output: (integer) 3
+
+
+RPUSH key value: Appends one or multiple values to a list.
+
+Example 1: RPUSH mylist "date"
+Output: (integer) 4
+Example 2: RPUSH mylist "elderberry"
+Output: (integer) 5
+Example 3: RPUSH mylist "fig"
+Output: (integer) 6
+
+
+LRANGE key start stop: Gets a range of elements from a list.
+
+Example 1: LRANGE mylist 0 -1
+Output: 1) "cherry" 2) "banana" 3) "apple" 4) "date" 5) "elderberry" 6) "fig"
+Example 2: LRANGE mylist 0 2
+Output: 1) "cherry" 2) "banana" 3) "apple"
+Example 3: LRANGE mylist 4 5
+Output: 1) "elderberry" 2) "fig"
+
+
+LINDEX key index: Gets an element from a list by its index.
+
+Example 1: LINDEX mylist 1
+Output: "banana"
+Example 2: LINDEX mylist 3
+Output: "date"
+Example 3: LINDEX mylist 5
+Output: "fig"
+
+
+Hash Commands
+HMSET key field value: Sets multiple hash fields to multiple values.
+
+Example 1: HMSET user1 name "Alice" age "30"
+Output: "OK"
+Example 2: HMSET user2 name "Bob" age "25"
+Output: "OK"
+Example 3: HMSET user3 name "Carol" age "27"
+Output: "OK"
+
+
+HMGET key field: Gets one or multiple hash fields.
+
+Example 1: HMGET user1 name
+Output: "Alice"
+Example 2: HMGET user2 age
+Output: "25"
+Example 3: HMGET user3 name age
+Output: 1) "Carol" 2) "27"
+
+
+Set Commands
+SADD key member: Adds one or more members to a set.
+
+Example 1: SADD myset "Hello"
+Output: (integer) 1
+Example 2: SADD myset "World"
+Output: (integer) 1
+Example 3: SADD myset "Redis"
+Output: (integer) 1
+
+
+SMEMBERS key: Gets all members in a set.
+
+Example 1: SMEMBERS myset
+Output: 1) "Hello" 2) "Redis" 3) "World"
+
+
+Sorted Set Commands
+ZADD key score member: Adds one or more members to a sorted set, or updates its score if it already exists.
+
+Example 1: ZADD myzset 1 "one"
+Output: (integer) 1
+Example 2: ZADD myzset 2 "two"
+Output: (integer) 1
+Example 3: ZADD myzset 3 "three"
+Output: (integer) 1
+
+
+ZRANGE key start stop [WITHSCORES]: Returns a range of members in a sorted set, by index, optionally with scores.
+
+Example 1: ZRANGE myzset 0 -1
+Output: 1) "one" 2) "two" 3) "three"
+Example 2: ZRANGE myzset 0 -1 WITHSCORES
+Output: 1) "one" 1 2) "two" 2 3) "three" 3
+
+
+
+Transaction Commands
+MULTI: Marks the start of a transaction block.
+EXEC: Executes all commands issued after MULTI.
+DISCARD: Discards all commands issued after MULTI.
+Example: Starting a transaction, setting values, and then executing:
+
+MULTI
+SET key1 "value1"
+SET key2 "value2"
+EXEC
+Output: 1) "OK" 2) "OK"
