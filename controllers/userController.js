@@ -49,7 +49,8 @@ async function register(req, res) {
 
 }
 
-async function login(req, res, next) {
+async function login(req, res) {
+  console.log(req.method,req.url,req.ip);
     validate(req.body, loginSchema);
     const existingUser = await findUser(req.body.email);
     if (!existingUser) {
@@ -70,7 +71,7 @@ async function login(req, res, next) {
     return successResponse(res, constant.LOGIN_SUCCESSFUL);
 }
 
-async function refresh(req, res, next) {
+async function refresh(req, res) {
     const token = req.get("RefreshToken") || req.query["RefreshToken"];
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 

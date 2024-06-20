@@ -36,14 +36,14 @@ async function init() {
   knex.on("query", (queryData) => console.log("\n" + queryData.sql));
 
 
-  // Redis-Server Connection
-  client.on('error', (err) => {
-    console.log('Redis Client Error', err);
-  });
-  client.on('ready', () => console.log('Redis is ready'));
+  // // Redis-Server Connection
+  // client.on('error', (err) => {
+  //   console.log('Redis Client Error', err);
+  // });
+  // client.on('ready', () => console.log('Redis is ready'));
 
-  await client.connect();
-  await client.ping();
+  // await client.connect();
+  // await client.ping();
 
   // Swagger API-DOCUMENTATION Setup
   const stringifiedSwaggerDoc = readFileSync(
