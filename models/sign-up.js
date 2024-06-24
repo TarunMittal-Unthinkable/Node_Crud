@@ -7,7 +7,7 @@ export default {
     last_name: { type: 'string'}, 
     dob: { type: 'string', format: 'date' }, 
     phone_no: { type: 'string', format: 'mobileNumber' }, 
-    gender: { type: 'string'},
+    gender: { type: 'string',enum:["male", "female"]},
   },
   required: ['email', 'password','phone_no'],
 };

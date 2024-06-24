@@ -15,7 +15,17 @@ async function getAllProductByBrandId(brandId, page, limit, search) {
         .limit(limit)
         .offset(offset);
 }
-
+async function getAllProductCount(brandId, search) {
+    return knex('products')
+        .count('* as rowCount') 
+        .where('brand_id', brandId)
+        .andWhere('is_active', true)
+        .andWhere(function() {
+            if (search) {
+                this.where('name', 'like', `%${search}%`);
+            }
+        });
+}
 
 async function getProductByBrandId(brandId) {
     return knex('products') 
@@ -58,5 +68,5 @@ async function deleteProductRecordByID(productId) {
         .update({is_active:false});
 }
 
-export default {createProduct,getAllProductByBrandId,updateProductRecordById,deleteProductRecordByID,getProductByName,getProductByBrandId}
+export default {createProduct,getAllProductByBrandId,updateProductRecordById,deleteProductRecordByID,getProductByName,getProductByBrandId,getAllProductCount}
 

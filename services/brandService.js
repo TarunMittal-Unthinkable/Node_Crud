@@ -8,12 +8,23 @@ async function getAllBrandByUserId(userId, page, limit, search) {
         .andWhere('is_active', true)
         .andWhere(function() {
             if (search) {
-                this.where('name', 'like', `%${search}%`);
+                this.where('name', 'ilike', `%${search}%`).orWhere('brandcode', 'ilike', `%${search}%`);
             }
         })
         .orderBy('created_at', 'desc')
         .limit(limit)
         .offset(offset);
+}
+async function getAllBrandCountByUserId(userId, search) {
+    return knex('brands')
+        .count('* as rowCount') 
+        .where('user_id', userId)
+        .andWhere('is_active', true)
+        .andWhere(function() {
+            if (search) {
+                this.where('name', 'like', `%${search}%`);
+            }
+        });
 }
 
 async function getAllBrandByName(userId, name) {
@@ -41,11 +52,14 @@ async function addBrand(payload) {
 
 // Update an existing brand record
 async function updateBrandRecordById(brandId, recordData) {
+    console.log("brandId",brandId);
+    const {name, description}=recordData
     return await knex('brands') 
         .where('id', brandId)
         .andWhere('is_active', true)
         .update({
-            ...recordData,
+            name:name,
+            description:description,
             updated_at: new Date()
         })
         .returning('*');
@@ -58,5 +72,5 @@ async function deleteBrandRecordByID(brandId) {
         .update({is_active:false});
 }
 
-export default {addBrand,getAllBrandByUserId,updateBrandRecordById,deleteBrandRecordByID,getBrandId,getAllBrandByName}
+export default {addBrand,getAllBrandByUserId,updateBrandRecordById,deleteBrandRecordByID,getBrandId,getAllBrandByName,getAllBrandCountByUserId}
 

@@ -39,9 +39,10 @@ function authenticateToken(req, res, next) {
   if (token == null) {
     throw errors.NO_TOKEN();
   }
-
+  console.log(token);
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err) {
+      console.log("=========HIIIIIIIII",err);
       throw errors.UNAUTHORIZED();
     }
   

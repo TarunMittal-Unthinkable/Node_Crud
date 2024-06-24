@@ -36,7 +36,18 @@ async function getAllProductByBrandId(req, res) {
       limit,
       search
     );
-    return successResponse(res, constant.PRODUCT_FETCHED, records);
+    console.log("records",records);
+    const [recordCount]= await productService.getAllProductCount(
+      brandId,
+      search
+    );
+    console.log("recordCount",recordCount);
+    return successResponse(res, constant.PRODUCT_FETCHED, {
+      total: recordCount.rowCount,
+      records: records,
+      page,
+      pages: Math.ceil(recordCount.rowCount / limit),
+    });
 };
 
 async function createProduct(req, res) {

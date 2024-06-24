@@ -23,6 +23,30 @@ import client from "../lib/redisClient.js";
 //   console.log("brand",brandInfo);
 //     return successResponse(res, constant.BRAND_FETCHED, brand);
 // }
+function generateRandomCode() {
+  // Function to generate a random alphabet character
+  function getRandomAlphabet() {
+    const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return alphabets.charAt(Math.floor(Math.random() * alphabets.length));
+  }
+
+  // Function to generate a random integer between 0 and 9
+  function getRandomNumber() {
+    return Math.floor(Math.random() * 10);
+  }
+  // Generate two random alphabet characters
+  let randomChars = getRandomAlphabet() + getRandomAlphabet();
+
+  // Generate five random numbers
+  let randomNumbers = '';
+  for (let i = 0; i < 5; i++) {
+    randomNumbers += getRandomNumber();
+  }
+
+  return randomChars + randomNumbers;
+}
+
+
 
 async function getAllBrandByUserId(req, res) {
   const { page = 1, limit = 10, search = "" } = req.query;
@@ -32,7 +56,18 @@ async function getAllBrandByUserId(req, res) {
       limit,
       search
     );
-    return successResponse(res, constant.BRAND_FETCHED, records);
+    console.log("records",records);
+    const [recordCount]= await brandService.getAllBrandCountByUserId(
+      req.user.id,
+      search
+    );
+    console.log("recordCount",recordCount);
+    return successResponse(res, constant.BRAND_FETCHED, {
+      total: recordCount.rowCount,
+      records: records,
+      page,
+      pages: Math.ceil(recordCount.rowCount / limit),
+    });
 }
 
 async function getBrandId(req, res) {
@@ -53,7 +88,8 @@ async function createBrand(req, res) {
     const payload = {
       user_id: req.user.id,
       name:req.body.name,
-      description: req.body.description
+      description: req.body.description,
+      brandcode:generateRandomCode()
     }
     const record = await brandService.addBrand(payload);
     return successResponse(res, constant.BRAND_CREATED, record);
@@ -61,6 +97,7 @@ async function createBrand(req, res) {
 }
 
 async function updateBrandRecordById(req, res) {
+  console.log("===body",req.body,req.params.id);
     validate(req.body, brandSchema);
     const record = await brandService.updateBrandRecordById(req.params.id, req.body);
     return successResponse(res, constant.BRAND_UPDATED, record);
