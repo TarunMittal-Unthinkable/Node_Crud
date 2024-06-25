@@ -4,6 +4,7 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
+import generateRandomCode from "../lib/codeGenerator.js";
 import client from "../lib/redisClient.js";
 
 // Redis-Implementation
@@ -59,7 +60,8 @@ async function createProduct(req, res) {
     const payload = {
       brand_id: req.body.brandId,
       name:req.body.name,
-      description: req.body.description
+      description: req.body.description,
+      productcode:generateRandomCode()
     }
     const productRecord = await productService.createProduct(payload);
     return successResponse(res, constant.PRODUCT_CREATED, productRecord);

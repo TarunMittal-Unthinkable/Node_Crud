@@ -4,7 +4,9 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
+import generateRandomCode from "../lib/codeGenerator.js";
 import client from "../lib/redisClient.js";
+
 
 // Redis-Implementation
 
@@ -23,30 +25,6 @@ import client from "../lib/redisClient.js";
 //   console.log("brand",brandInfo);
 //     return successResponse(res, constant.BRAND_FETCHED, brand);
 // }
-function generateRandomCode() {
-  // Function to generate a random alphabet character
-  function getRandomAlphabet() {
-    const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return alphabets.charAt(Math.floor(Math.random() * alphabets.length));
-  }
-
-  // Function to generate a random integer between 0 and 9
-  function getRandomNumber() {
-    return Math.floor(Math.random() * 10);
-  }
-  // Generate two random alphabet characters
-  let randomChars = getRandomAlphabet() + getRandomAlphabet();
-
-  // Generate five random numbers
-  let randomNumbers = '';
-  for (let i = 0; i < 5; i++) {
-    randomNumbers += getRandomNumber();
-  }
-
-  return randomChars + randomNumbers;
-}
-
-
 
 async function getAllBrandByUserId(req, res) {
   const { page = 1, limit = 10, search = "" } = req.query;

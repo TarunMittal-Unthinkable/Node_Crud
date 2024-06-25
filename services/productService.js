@@ -3,14 +3,16 @@ import knex from '../knex.js';
 
 async function getAllProductByBrandId(brandId, page, limit, search) {
     const offset = (page - 1) * limit;
-    return knex('products') 
+    return knex('products').
+        leftJoin('brands', 'products.brand_id', 'brands.id') 
         .where('brand_id', brandId)
-        .andWhere('is_active', true)
+        .andWhere('products.is_active', true)
         .andWhere(function() {
             if (search) {
-                this.where('name', 'like', `%${search}%`);
+                this.where('products.name', 'like', `%${search}%`).orWhere('brands.name', 'ilike', `%${search}%`);
             }
-        })
+        }).
+         select('products.*', 'brands.name as brand_name')
         .orderBy('created_at', 'desc')
         .limit(limit)
         .offset(offset);

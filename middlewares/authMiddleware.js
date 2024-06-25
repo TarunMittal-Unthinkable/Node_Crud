@@ -32,25 +32,31 @@ async function getUser(decodedToken) {
   return user;
 }
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader;
-  
-  if (token == null) {
-    throw errors.NO_TOKEN();
-  }
-  console.log(token);
-  jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-    if (err) {
-      console.log("=========HIIIIIIIII",err);
-      throw errors.UNAUTHORIZED();
+async function authenticateToken(req, res, next) {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader;
+
+    if (token == null) {
+      return next(errors.NO_TOKEN());
     }
-  
-    const user = await getUser(decodedToken);
-    console.log("User2", user);
-    req.user = user;
-    next();
-  });
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+      if (err) {
+        return next(errors.UNAUTHORIZED());
+      }
+
+      try {
+        const user = await getUser(decodedToken);
+        req.user = user;
+        next();
+      } catch (err) {
+        next(err); 
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
 export default authenticateToken;
