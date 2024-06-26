@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import loginSchema from "../models/login.js";
 import jwt from "jsonwebtoken";
 import constant from "../constant/success-response.js"
+import {handleDecryptPassword} from "../lib/passAuth.js"
 
 function generateAccessToken(user) {
   return jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
@@ -23,18 +24,19 @@ function generateRefreshToken(user) {
 
 async function register(req, res) {
     validate(req.body, signUpSchema);
-    const { email, password, first_name, last_name, dob, phone_no, gender } =
+    const { email, password, first_name, last_name, dob, phone_no, gender,nonce } =
       req.body;
     const existingUser = await findUser(email);
     if (existingUser) {
       throw errors.USER_EXISTS()
     }
+    const decryptedPassword = await handleDecryptPassword(password, nonce);
     const existingPhoneNumber = await findExistingNumber(phone_no);
     if (existingPhoneNumber) {
       throw errors.MOBILE_EXIST()
     }
     
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(decryptedPassword, 10);
     const fields = {
       email,
       password: hashedPassword,
@@ -50,15 +52,15 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-  console.log(req.method,req.url,req.ip);
     validate(req.body, loginSchema);
+    const decryptedPassword = await handleDecryptPassword(req.body.password, req.body.nonce);
     const existingUser = await findUser(req.body.email);
     if (!existingUser) {
       throw errors.INVALID_USER_LOGIN()
     }
 
     const isMatch = await bcrypt.compare(
-      req.body.password,
+      decryptedPassword,
       existingUser.password
     );
     if (!isMatch) {

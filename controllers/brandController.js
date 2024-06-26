@@ -43,7 +43,6 @@ async function getAllBrandByUserId(req, res) {
     return successResponse(res, constant.BRAND_FETCHED, {
       total: recordCount.rowCount,
       records: records,
-      page,
       pages: Math.ceil(recordCount.rowCount / limit),
     });
 }

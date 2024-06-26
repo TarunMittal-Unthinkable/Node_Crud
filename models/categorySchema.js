@@ -8,7 +8,7 @@ export default {
       totalQty: { type: 'number', format: 'numberString' },
       totalSold: { type: 'number', format: 'numberString' },
       sizes: { type: 'string', format: 'nonEmptyOrBlank',enum:["S","M","L","XL","XXL"]},
-      priceperquantity: { type: 'number'},
+      priceperquantity: { type: 'number',format: 'numberString'},
     },
     required: ['name', 'description'],
   };

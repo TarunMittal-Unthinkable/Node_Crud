@@ -27,10 +27,10 @@ import client from "../lib/redisClient.js";
 
 async function getAllProductByBrandId(req, res) {
     const { page = 1, limit = 10, search = "",brandId } = req.query;
-    const record = await productService.getProductByBrandId(brandId);
-    if (!record || record.length === 0) {
-        throw errors.PRODUCT_NOT_FOUND()
-    }
+    // const record = await productService.getProductByBrandId(brandId);
+    // if (!record || record.length === 0) {
+    //     throw errors.PRODUCT_NOT_FOUND()
+    // }
     const records = await productService.getAllProductByBrandId(
       brandId,
       page,
@@ -46,7 +46,6 @@ async function getAllProductByBrandId(req, res) {
     return successResponse(res, constant.PRODUCT_FETCHED, {
       total: recordCount.rowCount,
       records: records,
-      page,
       pages: Math.ceil(recordCount.rowCount / limit),
     });
 };

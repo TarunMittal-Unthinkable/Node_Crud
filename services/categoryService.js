@@ -17,6 +17,18 @@ async function getAllCategoryByProductId(productId, page, limit, search) {
 }
 
 
+async function getAllCategoryCount(productId, search) {
+    return knex('categories')
+        .count('* as rowCount') 
+        .where('product_id', productId)
+        .andWhere('is_active', true)
+        .andWhere(function() {
+            if (search) {
+                this.where('name', 'like', `%${search}%`);
+            }
+        });
+}
+
 async function getCategoryByProductId(productId) {
     return knex('categories') 
         .where('product_id', productId)
@@ -58,5 +70,5 @@ async function deleteCategoryRecordByID(categoryId) {
         .update({is_active:false});
 }
 
-export default {createCategory,getAllCategoryByProductId,updateCategoryRecordById,deleteCategoryRecordByID,getCategoryByName,getCategoryByProductId}
+export default {getAllCategoryCount,createCategory,getAllCategoryByProductId,updateCategoryRecordById,deleteCategoryRecordByID,getCategoryByName,getCategoryByProductId}
 

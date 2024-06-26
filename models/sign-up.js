@@ -8,6 +8,7 @@ export default {
     dob: { type: 'string', format: 'date' }, 
     phone_no: { type: 'string', format: 'mobileNumber' }, 
     gender: { type: 'string',enum:["male", "female"]},
+    nonce:{type: 'string'}
   },
   required: ['email', 'password','phone_no'],
 };

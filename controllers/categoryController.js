@@ -26,21 +26,32 @@ import client from "../lib/redisClient.js";
     
     async function getAllCategoryByProductId(req, res) {
         const { page = 1, limit = 10, search = "",productId } = req.query;
-        const record = await categoryService.getCategoryByProductId(productId);
-        if (!record || record.length === 0) {
-            throw errors.CATEGORY_NOT_FOUND()
-        }
+        // const record = await categoryService.getCategoryByProductId(productId);
+        // if (!record || record.length === 0) {
+        //     throw errors.CATEGORY_NOT_FOUND()
+        // }
         const records = await categoryService.getAllCategoryByProductId(
           productId,
           page,
           limit,
           search
         );
-        return successResponse(res, constant.CATEGORY_FETCHED, records);
+        const [recordCount]= await categoryService.getAllCategoryCount(
+            productId,
+            search
+          );
+          console.log("recordCount",recordCount);
+          return successResponse(res, constant.CATEGORY_FETCHED, {
+            total: recordCount.rowCount,
+            records: records,
+            pages: Math.ceil(recordCount.rowCount / limit),
+          });
+       // return successResponse(res, constant.CATEGORY_FETCHED, records);
     };
     
     async function createCategory(req, res) {
         validate(req.body, categorySchema);
+        console.log("req.body",req.body.name,req.body.productId);
         const records = await categoryService.getCategoryByName(req.body.name,req.body.productId);
         if (!records || records.length !== 0) {
             throw errors.CATEGORY_ALREADY_EXIST()
@@ -55,6 +66,7 @@ import client from "../lib/redisClient.js";
           sizes:req.body.sizes,
           priceperquantity:req.body.priceperquantity
         }
+        console.log("req.body",payload);
         const categoryRecord = await categoryService.createCategory(payload);
         return successResponse(res, constant.CATEGORY_CREATED, categoryRecord);
     };
