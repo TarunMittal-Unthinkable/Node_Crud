@@ -4,6 +4,7 @@ import validate from "../lib/validate.js";
 import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
+import generateRandomCode from "../lib/codeGenerator.js";
 import client from "../lib/redisClient.js";
 
     // Redis-Implementation
@@ -64,7 +65,8 @@ import client from "../lib/redisClient.js";
           totalQty:req.body.totalQty,
           totalSold:req.body.totalSold,
           sizes:req.body.sizes,
-          priceperquantity:req.body.priceperquantity
+          priceperquantity:req.body.priceperquantity,
+          categorycode:generateRandomCode()
         }
         console.log("req.body",payload);
         const categoryRecord = await categoryService.createCategory(payload);
