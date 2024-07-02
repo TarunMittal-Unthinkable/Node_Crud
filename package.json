@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.10.4",
     "asyncback": "^1.2.22",
     "bcrypt": "^5.1.1",
     "config": "^3.3.11",

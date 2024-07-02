@@ -9,6 +9,7 @@ import loginSchema from "../models/login.js";
 import jwt from "jsonwebtoken";
 import constant from "../constant/success-response.js"
 import {handleDecryptPassword} from "../lib/passAuth.js"
+import {sendEmail, sendSMS} from "../lib/sendNotification.js"
 
 function generateAccessToken(user) {
   return jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {

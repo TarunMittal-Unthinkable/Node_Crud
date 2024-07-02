@@ -1,7 +1,8 @@
 import knex from '../knex.js';
 
 
-async function getAllProductByBrandId(brandId, page, limit, search) {
+async function getAllProductByBrandId(brandId, page, limit, search,sortField,
+      sortOrder) {
     const offset = (page - 1) * limit;
     return knex('products').
         leftJoin('brands', 'products.brand_id', 'brands.id') 
@@ -13,7 +14,7 @@ async function getAllProductByBrandId(brandId, page, limit, search) {
             }
         }).
          select('products.*', 'brands.name as brand_name')
-        .orderBy('created_at', 'desc')
+        .orderBy(sortField,sortOrder)
         .limit(limit)
         .offset(offset);
 }

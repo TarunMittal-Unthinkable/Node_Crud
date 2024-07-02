@@ -5,6 +5,7 @@ import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
 import generateRandomCode from "../lib/codeGenerator.js";
+import {sendEmail, sendSMS} from "../lib/sendNotification.js"
 import client from "../lib/redisClient.js";
 
 // Redis-Implementation
@@ -26,7 +27,7 @@ import client from "../lib/redisClient.js";
 // }
 
 async function getAllProductByBrandId(req, res) {
-    const { page = 1, limit = 10, search = "",brandId } = req.query;
+    const { page = 1, limit = 10, search = "",brandId,sortField="",sortOrder="" } = req.query;
     // const record = await productService.getProductByBrandId(brandId);
     // if (!record || record.length === 0) {
     //     throw errors.PRODUCT_NOT_FOUND()
@@ -35,7 +36,9 @@ async function getAllProductByBrandId(req, res) {
       brandId,
       page,
       limit,
-      search
+      search,
+      sortField,
+      sortOrder
     );
     console.log("records",records);
     const [recordCount]= await productService.getAllProductCount(

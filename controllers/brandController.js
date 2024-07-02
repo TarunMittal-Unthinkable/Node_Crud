@@ -5,6 +5,7 @@ import successResponse from "../lib/successResponse.js";
 import constant from "../constant/success-response.js"
 import errors from "../lib/errors.js";
 import generateRandomCode from "../lib/codeGenerator.js";
+import {sendEmail, sendSMS} from "../lib/sendNotification.js"
 import client from "../lib/redisClient.js";
 
 
@@ -27,12 +28,14 @@ import client from "../lib/redisClient.js";
 // }
 
 async function getAllBrandByUserId(req, res) {
-  const { page = 1, limit = 10, search = "" } = req.query;
+  const { page = 1, limit = 10, search = "",sortField="",sortOrder=""} = req.query;
     const records = await brandService.getAllBrandByUserId(
       req.user.id,
       page,
       limit,
-      search
+      search,
+      sortField,
+      sortOrder
     );
     console.log("records",records);
     const [recordCount]= await brandService.getAllBrandCountByUserId(
@@ -69,6 +72,10 @@ async function createBrand(req, res) {
       brandcode:generateRandomCode()
     }
     const record = await brandService.addBrand(payload);
+   // sendNotification(req.user.id,constant.BRAND_CREATED)
+    sendSMS('+917239866751',"Brand Created Successfully");
+    sendEmail('ashwinmeena.30@gmail.com',"Brand Created Successfully");
+    
     return successResponse(res, constant.BRAND_CREATED, record);
 
 }

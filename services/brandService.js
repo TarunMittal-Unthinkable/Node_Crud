@@ -1,7 +1,7 @@
 import knex from '../knex.js';
 
 // Retrieve records by user ID with pagination and optional search
-async function getAllBrandByUserId(userId, page, limit, search) {
+async function getAllBrandByUserId(userId, page, limit, search,sortField,sortOrder) {
     const offset = (page - 1) * limit;
     return knex('brands') 
         .where('user_id', userId)
@@ -11,7 +11,7 @@ async function getAllBrandByUserId(userId, page, limit, search) {
                 this.where('name', 'ilike', `%${search}%`).orWhere('brandcode', 'ilike', `%${search}%`);
             }
         })
-        .orderBy('created_at', 'desc')
+        .orderBy(sortField, sortOrder)
         .limit(limit)
         .offset(offset);
 }
